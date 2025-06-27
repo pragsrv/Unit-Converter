@@ -35,6 +35,21 @@
       </div>
     </div>
 
+    <!-- Custom Unit Creator -->
+    <div class="custom-unit">
+      <h3>➕ Add Custom Unit</h3>
+      <div class="row">
+        <input type="text" id="customName" placeholder="Unit name (e.g. lightyear)" />
+        <input type="number" id="customValue" placeholder="In base unit (e.g. meters)" />
+        <button id="addCustomBtn">Add</button>
+      </div>
+
+      <div class="custom-list">
+        <h4>🧩 Custom Units in <span id="customCategoryLabel">Length</span></h4>
+        <ul id="customUnitList"></ul>
+      </div>
+    </div>
+
     <div class="history">
       <h3>🧾 Recent Conversions</h3>
       <ul id="historyList"></ul>

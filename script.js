@@ -36,6 +36,29 @@ const swapBtn = document.getElementById("swapBtn");
 const tabs = document.querySelectorAll(".tab");
 const copyBtn = document.getElementById("copyBtn");
 const historyList = document.getElementById("historyList");
+const customName = document.getElementById("customName");
+const customValue = document.getElementById("customValue");
+const addCustomBtn = document.getElementById("addCustomBtn");
+const customList = document.getElementById("customUnitList");
+const customLabel = document.getElementById("customCategoryLabel");
+
+function getBaseUnits(category) {
+  return {
+    length: {
+      meter: 1,
+      kilometer: 0.001,
+      mile: 0.000621371,
+      foot: 3.28084,
+      inch: 39.3701
+    },
+    mass: {
+      gram: 1,
+      kilogram: 0.001,
+      pound: 0.00220462,
+      ounce: 0.035274
+    }
+  }[category] || {};
+}
 
 function populateUnits() {
   inputUnit.innerHTML = "";
@@ -53,6 +76,7 @@ function populateUnits() {
 
   convert();
   inputValue.focus();
+  renderCustomUnits();
 }
 
 function convert() {
@@ -96,8 +120,29 @@ function convertTemperature(val, from, to) {
 function updateHistory(entry) {
   history.unshift(entry);
   if (history.length > 5) history.pop();
-
   historyList.innerHTML = history.map(item => `<li>${item}</li>`).join("");
+}
+
+function renderCustomUnits() {
+  const units = categories[activeCategory].units;
+  const baseUnits = getBaseUnits(activeCategory);
+  customList.innerHTML = "";
+
+  for (const unit in units) {
+    if (!(unit in baseUnits)) {
+      const li = document.createElement("li");
+      li.innerHTML = `${unit} <button onclick="deleteCustomUnit('${unit}')">🗑</button>`;
+      customList.appendChild(li);
+    }
+  }
+
+  customLabel.textContent = capitalize(activeCategory);
+}
+
+function deleteCustomUnit(unit) {
+  delete categories[activeCategory].units[unit];
+  populateUnits();
+  renderCustomUnits();
 }
 
 function capitalize(w) {
@@ -119,6 +164,29 @@ copyBtn.addEventListener("click", () => {
   }
 });
 
+addCustomBtn.addEventListener("click", () => {
+  const name = customName.value.trim().toLowerCase();
+  const val = parseFloat(customValue.value);
+
+  if (!name || isNaN(val) || val <= 0) {
+    alert("Please enter a valid unit name and positive value.");
+    return;
+  }
+
+  if (activeCategory === "temperature") {
+    alert("Custom units not allowed for temperature.");
+    return;
+  }
+
+  categories[activeCategory].units[name] = val;
+  populateUnits();
+  renderCustomUnits();
+
+  customName.value = "";
+  customValue.value = "";
+  alert(`Custom unit "${name}" added to ${capitalize(activeCategory)}.`);
+});
+
 inputValue.addEventListener("input", convert);
 inputUnit.addEventListener("change", convert);
 outputUnit.addEventListener("change", convert);
@@ -129,14 +197,15 @@ tabs.forEach(tab => {
     tab.classList.add("active");
     activeCategory = tab.dataset.category;
     populateUnits();
+    renderCustomUnits();
   });
 });
 
 document.getElementById("toggleTheme").addEventListener("click", () => {
   document.body.classList.toggle("dark");
-  const icon = document.getElementById("toggleTheme");
-  icon.textContent = document.body.classList.contains("dark") ? "🌞" : "🌙";
+  document.getElementById("toggleTheme").textContent =
+    document.body.classList.contains("dark") ? "🌞" : "🌙";
 });
 
-// Initial load
+// Initial setup
 populateUnits();
