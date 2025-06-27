@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multi Unit Converter</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="converter-container">
+    <h1>Multi Unit Converter</h1>
+    
+    <div class="category-tabs">
+      <button class="tab active" data-category="length">Length</button>
+      <!-- Future tabs: Mass, Temp, Time -->
+    </div>
+
+    <div class="converter-box" id="length-converter">
+      <div class="row">
+        <input type="number" id="inputValue" placeholder="Enter value" />
+        <select id="inputUnit">
+          <option value="meter">Meters</option>
+          <option value="kilometer">Kilometers</option>
+          <option value="mile">Miles</option>
+          <option value="foot">Feet</option>
+          <option value="inch">Inches</option>
+        </select>
+      </div>
+
+      <button id="swapBtn">⇆</button>
+
+      <div class="row">
+        <input type="text" id="outputValue" placeholder="Converted value" readonly />
+        <select id="outputUnit">
+          <option value="meter">Meters</option>
+          <option value="kilometer">Kilometers</option>
+          <option value="mile">Miles</option>
+          <option value="foot">Feet</option>
+          <option value="inch">Inches</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
